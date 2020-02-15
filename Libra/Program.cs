@@ -62,7 +62,7 @@ namespace Libra
 
     class MenuItem : IPrintable, IProcessable
     {
-        private Action _processHandler2;
+        private Action _processHandler;
 
         public string Title { get; }
         public int Num { get; }
