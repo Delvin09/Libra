@@ -32,17 +32,18 @@ namespace Model
         public IEnumerable<Book> FindBooksByAuthorName(string name)
             => libraryContext.Books.Where(b => b.Author.FirstName.Contains(name) || b.Author.LastName.Contains(name));
 
-        public IEnumerable<Author> FindAuthorByName(string name)
-            => libraryContext.Authors.Where(a => a.FirstName.Contains(name) || a.LastName.Contains(name));
+        public IEnumerable<Author> FindAuthorByName(string firstName, string middleName, string lastName, DateTime birthdate)
+            => libraryContext.Authors.Where(a => a.FirstName == firstName && a.MiddleName == middleName && a.LastName == lastName && a.Birthday == birthdate);
 
         public void Add(Book book) => libraryContext.Books.Add(book);
 
         public void Remove(Book book) => libraryContext.Books.Remove(book);
 
-        public void RemoveById(Guid id)
+        public Book RemoveById(Guid id)
         {
             var book = libraryContext.Books.FirstOrDefault(b => b.BookId == id);
             libraryContext.Books.Remove(book);
+            return book;
         }
 
         public void SaveChanges() => libraryContext.SaveChanges();

@@ -213,6 +213,18 @@ namespace Libra
                 }
                 while (!DateTime.TryParse(bdStr, out bd));
 
+                var existingAuthor = repository.FindAuthorByName(firstName, midName, lastName, bd).FirstOrDefault();
+                if (existingAuthor == null)
+                {
+                    existingAuthor = new Author()
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        MiddleName = midName,
+                        Birthday = bd
+                    };
+                }
+
                 repository.Add(new Book()
                 {
                     BookId = Guid.NewGuid(),
@@ -220,13 +232,7 @@ namespace Libra
                     Title = title,
                     Year = year,
                     Genre = genre,
-                    Author = new Author()
-                    {
-                        FirstName = firstName,
-                        LastName = lastName,
-                        MiddleName = midName,
-                        Birthday = bd
-                    }
+                    Author = existingAuthor
                 });
             }
         }
@@ -235,7 +241,24 @@ namespace Libra
         {
             using (var repository = new LibraryRepository())
             {
+                Console.WriteLine("Enter Id of book: ");
+                var input = Console.ReadLine();
+                if (Guid.TryParse(input, out Guid bookId)) {
+                    if (repository.RemoveById(bookId) != null)
+                    {
+                        Console.WriteLine("Book removed success!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Can't find any book with this id!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input!");
+                }
 
+                Console.ReadLine();
             }
         }
 
