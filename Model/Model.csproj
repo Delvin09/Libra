@@ -54,6 +54,7 @@
     <Compile Include="Entities\Author.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\BookGenre.cs" />
+    <Compile Include="Entities\BorrowedHistory.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="LibraryContext.cs" />
     <Compile Include="LibraryRepository.cs" />

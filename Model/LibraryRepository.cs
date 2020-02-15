@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
@@ -20,19 +21,19 @@ namespace Model
             libraryContext?.Dispose();
         }
 
-        public IEnumerable<Book> FindByAuthor(Author author)
-            => libraryContext.Books.Where(b => b.Author == author).ToArray();
+        public IQueryable<Book> FindByAuthor(Author author)
+            => libraryContext.Books.Where(b => b.Author == author);
 
-        public IEnumerable<Book> FindByGenre(BookGenre genre)
-            => libraryContext.Books.Where(b => b.Genre == genre).ToArray();
+        public IQueryable<Book> FindByGenre(BookGenre genre)
+            => libraryContext.Books.Where(b => b.Genre == genre);
 
-        public IEnumerable<Book> FindByYear(int year)
-            => libraryContext.Books.Where(b => b.Year == year).ToArray();
+        public IQueryable<Book> FindByYear(int year)
+            => libraryContext.Books.Where(b => b.Year == year);
 
-        public IEnumerable<Book> FindBooksByAuthorName(string name)
+        public IQueryable<Book> FindBooksByAuthorName(string name)
             => libraryContext.Books.Where(b => b.Author.FirstName.Contains(name) || b.Author.LastName.Contains(name));
 
-        public IEnumerable<Author> FindAuthorByName(string firstName, string middleName, string lastName, DateTime birthdate)
+        public IQueryable<Author> FindAuthorByName(string firstName, string middleName, string lastName, DateTime birthdate)
             => libraryContext.Authors.Where(a => a.FirstName == firstName && a.MiddleName == middleName && a.LastName == lastName && a.Birthday == birthdate);
 
         public void Add(Book book) => libraryContext.Books.Add(book);
@@ -45,6 +46,20 @@ namespace Model
             libraryContext.Books.Remove(book);
             return book;
         }
+
+        public IEnumerable<BorrowedHistory> GetAllBorrowed(Client currentClient)
+        {
+            var client = libraryContext.Clients.Single(c => c.Id == currentClient.Id);
+            return client.History;
+        }
+
+        public Client FindClient(string name)
+        {
+            return libraryContext.Clients.FirstOrDefault(c => c.Name == name);
+        }
+
+        public Client CreateClient(string name)
+            => libraryContext.Clients.Add(new Client() { Name = name });
 
         public void SaveChanges() => libraryContext.SaveChanges();
     }
