@@ -5,8 +5,76 @@ using System.Threading.Tasks;
 using Model;
 using Ui.Common;
 
+//[assembly: MenuItem2(1, "Find book by author", typeof(Libra.FindByAuthorHandler))]
+//[assembly: MenuItem2(2, "Find book by genre", typeof(Libra.Program))]
+//[assembly: MenuItem2(3, "Find book by year")]
+//[assembly: MenuItem2(4, "Add book")]
+//[assembly: MenuItem2(5, "Remove book")]
+
 namespace Libra
 {
+    [MenuItem(1, "Find book by author")]
+    class FindByAuthorHandler : IMenuHandler
+    {
+        public void Handle()
+        {
+            using (var repository = new LibraryRepository())
+            {
+                Console.WriteLine("Enter author name: ");
+                var name = Console.ReadLine();
+
+                var books = repository.FindBooksByAuthorName(name).ToList();
+                if (books.Count > 0)
+                {
+                    foreach (var b in books)
+                    {
+                        Console.WriteLine($"{b.BookId}\t{b.Title}\t{b.Genre}\t{b.Year}\t{b.Author}");
+                    }
+                }
+                else
+                    Console.WriteLine("Sorry, nothing found.");
+                Console.ReadLine();
+            }
+        }
+    }
+
+    [MenuItem(2, "Find book by genre")]
+    class FindByGenreHandler : IMenuHandler
+    {
+        public void Handle()
+        {
+            using (var repository = new LibraryRepository())
+            {
+                Console.WriteLine("Choose genre: ");
+
+                var i = 0;
+                foreach (var g in Enum.GetNames(typeof(BookGenre)))
+                    Console.WriteLine($"{i++}. {g}");
+
+                var input = Console.ReadLine();
+                if (int.TryParse(input, out int genreInt))
+                {
+                    var books = repository.FindByGenre((BookGenre)genreInt).ToList();
+                    if (books.Count > 0)
+                    {
+                        foreach (var b in books)
+                        {
+                            Console.WriteLine($"{b.BookId}\t{b.Title}\t{b.Author}\t{b.Year}");
+                        }
+                    }
+                    else
+                        Console.WriteLine("Sorry, nothing found.");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input!");
+                }
+
+                Console.ReadLine();
+            }
+        }
+    }
+
     class Program
     {
         static void FindByAuthor()
@@ -186,16 +254,18 @@ namespace Libra
 
         static void Main(string[] args)
         {
-            var menuItems = new MenuItem[] {
-                new MenuItem(1, "Find book by author", FindByAuthor),
-                new MenuItem(2, "Find book by genre", FindByGenre),
-                new MenuItem(3, "Find book by year", FindByYear),
-                new MenuItem(4, "Add book", AddBook),
-                new MenuItem(5, "Remove book", RemoveBook)
-            };
+            MenuBuilder.Default.DetectMenuOn<Program>().Build();
 
-            var menu = new Menu(menuItems);
-            menu.Process();
+            //var menuItems = new MenuItem[] {
+            //    new MenuItem(1, "Find book by author", FindByAuthor),
+            //    new MenuItem(2, "Find book by genre", FindByGenre),
+            //    new MenuItem(3, "Find book by year", FindByYear),
+            //    new MenuItem(4, "Add book", AddBook),
+            //    new MenuItem(5, "Remove book", RemoveBook)
+            //};
+
+            //var menu = new Menu(menuItems);
+            //menu.Process();
         }
     }
 }

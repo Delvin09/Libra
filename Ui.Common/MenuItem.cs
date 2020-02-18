@@ -2,7 +2,7 @@
 
 namespace Ui.Common
 {
-    public class MenuItem : IPrintable, IProcessable
+    class MenuItem : IPrintable, IProcessable
     {
         private Action _processHandler;
 

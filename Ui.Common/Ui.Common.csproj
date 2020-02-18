@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MenuBuilder.cs" />
+    <Compile Include="MenuItemAttribute.cs" />
     <Compile Include="IPrintable.cs" />
     <Compile Include="IProcessable.cs" />
     <Compile Include="Menu.cs" />

@@ -15,6 +15,7 @@ namespace Client
     {
         private static ClientModel _currentClient;
 
+        [MenuItem(1, "Borrow book")]
         static void BorrowBook()
         {
             using (var repository = new LibraryRepository())
@@ -45,6 +46,7 @@ namespace Client
             }
         }
 
+        [MenuItem(2, "Return book")]
         static void ReturnBook()
         {
             using (var repository = new LibraryRepository())
@@ -57,6 +59,7 @@ namespace Client
             }
         }
 
+        [MenuItem(3, "View borrowed books")]
         static void ViewBorrowBook()
         {
             using (var repository = new LibraryRepository())
@@ -77,6 +80,7 @@ namespace Client
             Console.ReadLine();
         }
 
+        [MenuItem(4, "View history of borrowed books")]
         static void ViewHistoryBorrowBook()
         {
             using (var repository = new LibraryRepository())
@@ -129,15 +133,19 @@ namespace Client
         {
             Login();
 
-            var menuItems = new MenuItem[] {
-                new MenuItem(1, "Borrow book", BorrowBook),
-                new MenuItem(2, "Return book", ReturnBook),
-                new MenuItem(3, "View borrowed books", ViewBorrowBook),
-                new MenuItem(4, "View history of borrowed books", ViewHistoryBorrowBook),
-            };
+            MenuBuilder.Default
+                .DetectMenuOn<Program>()
+                .Build();
 
-            var menu = new Menu(menuItems);
-            menu.Process();
+            //var menuItems = new MenuItem[] {
+            //    new MenuItem(1, "Borrow book", BorrowBook),
+            //    new MenuItem(2, "Return book", ReturnBook),
+            //    new MenuItem(3, "View borrowed books", ViewBorrowBook),
+            //    new MenuItem(4, "View history of borrowed books", ViewHistoryBorrowBook),
+            //};
+
+            //var menu = new Menu(menuItems);
+            //menu.Process();
         }
     }
 }

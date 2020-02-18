@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Ui.Common
 {
-    public class Menu : IPrintable, IProcessable
+    class Menu : IPrintable, IProcessable
     {
         private List<MenuItem> _items = new List<MenuItem>();
         public IEnumerable<MenuItem> Items
