@@ -1,29 +1,30 @@
 ﻿using System;
+using Ui.Common.Interfaces;
 
 namespace Ui.Common
 {
-    class MenuItem : IPrintable, IProcessable
+    internal class MenuItem : IMenuItem
     {
         private Action _processHandler;
 
         public string Title { get; }
+
         public int Num { get; }
 
-        public MenuItem(int num, string title, Action processHandler)
+        public int Order { get; }
+
+        public MenuItem(int num, int order, string title, Action processHandler)
         {
             Title = title;
             Num = num;
+            Order = order;
             _processHandler = processHandler;
         }
 
-        public void Print()
-        {
-            Console.WriteLine($"{Num}. {Title}");
-        }
-
-        public void Process()
+        public virtual bool Process()
         {
             _processHandler?.Invoke();
+            return false;
         }
     }
 }

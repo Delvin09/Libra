@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.902
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libra", "Libra\Libra.csproj", "{9C0F8923-4D11-450A-AF5E-603BACB08365}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{ED139175-D2CC-4228-86C5-641737938CA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui.Common", "Ui.Common\Ui.Common.csproj", "{D24CFA11-823E-4525-847F-59153FEF4D50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{95844115-8DF8-436C-86FD-12A02A66C1B3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{DAB0F4F3-394D-4696-9F9E-C02B33BC51E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +40,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9C0F8923-4D11-450A-AF5E-603BACB08365} = {95844115-8DF8-436C-86FD-12A02A66C1B3}
+		{CC734115-151F-4AB9-8E7E-2F76F55BC1BA} = {95844115-8DF8-436C-86FD-12A02A66C1B3}
+		{D24CFA11-823E-4525-847F-59153FEF4D50} = {DAB0F4F3-394D-4696-9F9E-C02B33BC51E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C13BB2A7-4B59-4555-9DD4-B03E098B1C0E}

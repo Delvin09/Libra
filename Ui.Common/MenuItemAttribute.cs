@@ -6,21 +6,17 @@ using System.Threading.Tasks;
 
 namespace Ui.Common
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
     public sealed class MenuItemAttribute : Attribute
     {
         public MenuItemAttribute(int num, string description)
         {
             Num = num;
-            Description = description;
+            Title = description;
         }
 
         public int Num { get; }
-        public string Description { get; }
-    }
-
-    public interface IMenuHandler
-    {
-        void Handle();
+        public string Title { get; }
+        public int Order { get; set; } = 0;
     }
 }

@@ -41,10 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExitMenuItem.cs" />
+    <Compile Include="Interfaces\IMenu.cs" />
+    <Compile Include="Interfaces\IMenuItem.cs" />
     <Compile Include="MenuBuilder.cs" />
     <Compile Include="MenuItemAttribute.cs" />
-    <Compile Include="IPrintable.cs" />
-    <Compile Include="IProcessable.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="MenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

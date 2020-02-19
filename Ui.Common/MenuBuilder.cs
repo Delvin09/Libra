@@ -4,50 +4,93 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using Ui.Common.Interfaces;
 
 namespace Ui.Common
 {
     public class MenuBuilder
     {
-        private Dictionary<MenuItemAttribute, MethodInfo> _attrsInMethods = new Dictionary<MenuItemAttribute, MethodInfo>();
-        private Dictionary<MenuItemAttribute, Type> _attrsInTypes = new Dictionary<MenuItemAttribute, Type>();
+        private readonly List<Type> _registredMenu = new List<Type>();
+        private readonly Menu _menu = new Menu();
+        private readonly List<IMenuItem> _toAll = new List<IMenuItem>();
 
         public static MenuBuilder Default { get; } = new MenuBuilder();
 
-        public MenuBuilder DetectMenuOn<T>()
+        public MenuBuilder AddDefaultExit(bool toAll = true)
         {
-            var flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.FlattenHierarchy;
-            var methods = typeof(T).Assembly
-                .GetTypes().SelectMany(t => t.GetMethods(flags)
-                    .Where(m => m.GetCustomAttribute(typeof(MenuItemAttribute)) != null));
-
-            _attrsInMethods = methods.ToDictionary(k => k.GetCustomAttribute<MenuItemAttribute>(), v => v);
-
-            //var flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.FlattenHierarchy;
-            var types = typeof(T).Assembly
-                .GetTypes().Where(m => m.GetCustomAttribute(typeof(MenuItemAttribute)) != null);
-
-            //types.Any(t => !t.GetInterfaces().Any(typeof(IMenuHandler)));
-
-            _attrsInTypes = types.ToDictionary(k => k.GetCustomAttribute<MenuItemAttribute>(), v => v);
+            var item = new ExitMenuItem();
+            if (toAll)
+                _toAll.Add(item);
+            _menu.AddItem(item);
             return this;
         }
 
-        public void Build()
+        public MenuBuilder AddMenu<T>(bool toAll = false) where T : IMenu, new()
         {
-            var menuItems = new List<MenuItem>();
-            foreach (var attribute in _attrsInMethods.OrderBy(a => a.Key.Num))
+            var item = new T();
+            if (toAll)
+                _toAll.Add(item);
+            _menu.AddItem(item);
+            return this;
+        }
+
+        public MenuBuilder AddMenuItem<T>(bool toAll = false) where T : IMenuItem, new()
+        {
+            var item = new T();
+            if (toAll)
+                _toAll.Add(item);
+            _menu.AddItem(item);
+            return this;
+        }
+
+        public MenuBuilder DetectMenuOn<T>() where T : new()
+        {
+            _registredMenu.Add(typeof(T));
+            return this;
+        }
+
+        public IMenu Build()
+        {
+            foreach (var type in _registredMenu)
             {
-                menuItems.Add(new MenuItem(attribute.Key.Num, attribute.Key.Description, () => { attribute.Value.Invoke(null, new object[0]); }));
+                Collect(_menu, type);
             }
 
-            foreach (var attribute in _attrsInTypes.OrderBy(a => a.Key.Num))
+            return _menu;
+        }
+
+        private void Collect(Menu menu, Type type)
+        {
+            var menuItems = type.GetMethods()
+                .Where(m => m.GetCustomAttribute<MenuItemAttribute>() != null);
+
+            var invalidMenuItem = menuItems
+                .FirstOrDefault(m => m.GetParameters().Length > 0);
+
+            if (invalidMenuItem != null)
             {
-                menuItems.Add(new MenuItem(attribute.Key.Num, attribute.Key.Description, () => { ((IMenuHandler)Activator.CreateInstance(attribute.Value)).Handle(); }));
+                throw new InvalidOperationException($"MenuItem handler {invalidMenuItem.DeclaringType.FullName}.{invalidMenuItem.Name} must not has parameters.");
             }
 
-            var menu = new Menu(menuItems.ToArray());
-            menu.Process();
+            foreach(var menuItem in menuItems)
+            {
+                var attr = menuItem.GetCustomAttribute<MenuItemAttribute>();
+                menu.AddItem(new MenuItem(attr.Num, attr.Order, attr.Title, () => { menuItem.Invoke(Activator.CreateInstance(type), new object[0]); }));
+            }
+
+            foreach(var menuItem in _toAll.Except(menu.Items))
+            {
+                menu.AddItem(menuItem);
+            }
+
+            foreach (var sb in type.GetProperties()
+                .Where(p => p.GetCustomAttribute<MenuItemAttribute>() != null)
+                .Select(p => new { Type = p.PropertyType, Attribute = p.GetCustomAttribute<MenuItemAttribute>() }))
+            {
+                var innerMenu = new Menu(sb.Attribute.Num, sb.Attribute.Order, sb.Attribute.Title);
+                menu.AddItem(innerMenu);
+                Collect(innerMenu, sb.Type);
+            }
         }
     }
 }

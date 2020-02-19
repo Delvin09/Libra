@@ -1,25 +1,39 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Ui.Common.Interfaces;
 
 namespace Ui.Common
 {
-    class Menu : IPrintable, IProcessable
+    internal class Menu : IMenu
     {
-        private List<MenuItem> _items = new List<MenuItem>();
-        public IEnumerable<MenuItem> Items
-        {
-            get => _items;
-        }
+        private List<IMenuItem> _items = new List<IMenuItem>();
 
-        public Menu(params MenuItem[] items)
+        public IEnumerable<IMenuItem> Items => _items;
+
+        public int Num { get; }
+
+        public string Title { get; }
+
+        public int Order { get; }
+
+        public Menu(int num = -1, int order = 0, string title = null, params IMenuItem[] items)
         {
+            Num = num;
+            Title = title;
+            Order = order;
             _items.AddRange(items);
         }
 
-        public void Process()
+        internal void AddItem(IMenuItem menuItem)
         {
-            while (true)
+            _items.Add(menuItem);
+        }
+
+        public bool Process()
+        {
+            var isExit = false;
+            while (!isExit)
             {
                 Print();
                 var input = Console.ReadLine();
@@ -27,7 +41,7 @@ namespace Ui.Common
                 {
                     foreach (var item in Items.Where(i => i.Num == num))
                     {
-                        item.Process();
+                        isExit = item.Process();
                     }
                 }
                 else
@@ -38,12 +52,14 @@ namespace Ui.Common
 
                 Console.Clear();
             }
+            return false;
         }
 
         public void Print()
         {
-            foreach (var item in _items)
-                item.Print();
+            Console.Clear();
+            foreach (var item in _items.OrderBy(i => i.Order).ThenBy(i => i.Num))
+                Console.WriteLine($"{item.Num}. {item.Title}");
         }
     }
 }
