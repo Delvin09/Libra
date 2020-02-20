@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class Blablabla
+    public class __hackEntityAssembly
     {
         private static string __hack = typeof(SqlProviderServices).ToString();
     }
