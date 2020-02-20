@@ -33,6 +33,8 @@ namespace Model
         public IQueryable<Book> FindBooksByAuthorName(string name)
             => libraryContext.Books.Where(b => b.Author.FirstName.Contains(name) || b.Author.LastName.Contains(name));
 
+        public IQueryable<Book> GetAllBooks() => libraryContext.Books;
+
         public IQueryable<Author> FindAuthorByName(string firstName, string middleName, string lastName, DateTime birthdate)
             => libraryContext.Authors.Where(a => a.FirstName == firstName && a.MiddleName == middleName && a.LastName == lastName && a.Birthday == birthdate);
 
