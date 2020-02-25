@@ -2,19 +2,20 @@
 using Model;
 using System.IO;
 using Ui.Common;
+using System.Threading.Tasks;
 
 namespace Libra
 {
     public class ExportSubmenu
     {
         [MenuItem(1, "Export Books")]
-        public void ExportBooks()
+        public async void ExportBooks()
         {
             using (var repository = new LibraryRepository())
             {
-                var books = repository.GetAllBooks();
+                var books = await repository.GetAllBooks();
                 using (FileStream stream = new FileStream("books.csv", FileMode.Create, FileAccess.ReadWrite))
-                    CsvConvertor.Serialize(books, stream);
+                    await CsvConvertor.Serialize(books, stream);
             }
         }
 

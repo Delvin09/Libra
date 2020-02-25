@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Ui.Common.Interfaces;
 
 namespace Ui.Common
 {
     internal class MenuItem : IMenuItem
     {
-        private Action _processHandler;
+        private Func<Task> _processHandler;
 
         public string Title { get; }
 
@@ -13,7 +14,7 @@ namespace Ui.Common
 
         public int Order { get; }
 
-        public MenuItem(int num, int order, string title, Action processHandler)
+        public MenuItem(int num, int order, string title, Func<Task> processHandler)
         {
             Title = title;
             Num = num;
@@ -21,9 +22,9 @@ namespace Ui.Common
             _processHandler = processHandler;
         }
 
-        public virtual bool Process()
+        public virtual async Task<bool> Process()
         {
-            _processHandler?.Invoke();
+            await _processHandler?.Invoke();
             return false;
         }
     }

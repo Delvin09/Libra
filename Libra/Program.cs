@@ -18,7 +18,7 @@ namespace Libra
                 .DetectMenuOn<MainMenu>()
                 .AddDefaultExit()
                 .Build()
-                .Process();
+                .Process().Wait();
         }
     }
 }

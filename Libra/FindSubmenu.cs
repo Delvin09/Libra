@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Model;
 using Ui.Common;
 
@@ -8,14 +9,14 @@ namespace Libra
     class FindSubmenu
     {
         [MenuItem(1, "Find book by author")]
-        public void FindByAuthor()
+        public async void FindByAuthor()
         {
             using (var repository = new LibraryRepository())
             {
                 Console.WriteLine("Enter author name: ");
                 var name = Console.ReadLine();
 
-                var books = repository.FindBooksByAuthorName(name).ToList();
+                var books = (await repository.FindBooksByAuthorName(name)).ToList();
                 if (books.Count > 0)
                 {
                     foreach (var b in books)
@@ -30,7 +31,7 @@ namespace Libra
         }
 
         [MenuItem(2, "Find book by genre")]
-        public void FindByGenre()
+        public async void FindByGenre()
         {
             using (var repository = new LibraryRepository())
             {
@@ -43,7 +44,7 @@ namespace Libra
                 var input = Console.ReadLine();
                 if (int.TryParse(input, out int genreInt))
                 {
-                    var books = repository.FindByGenre((BookGenre)genreInt).ToList();
+                    var books = (await repository.FindByGenre((BookGenre)genreInt)).ToList();
                     if (books.Count > 0)
                     {
                         foreach (var b in books)
@@ -64,7 +65,7 @@ namespace Libra
         }
 
         [MenuItem(3, "Find book by year")]
-        public void FindByYear()
+        public async Task FindByYear()
         {
             using (var repository = new LibraryRepository())
             {
@@ -72,7 +73,7 @@ namespace Libra
                 var input = Console.ReadLine();
                 if (int.TryParse(input, out int year))
                 {
-                    var books = repository.FindByYear(year).ToList();
+                    var books = (await repository.FindByYear(year)).ToList();
                     if (books.Count > 0)
                     {
                         foreach (var b in books)

@@ -8,23 +8,11 @@ using System.Reflection;
 
 namespace DataStore
 {
-    internal class ColumnInfo
-    {
-        public MemberInfo Member { get; set; }
-        public string ColumnName { get; set; }
-    }
-
-    internal class RowInfo
-    {
-        public ColumnInfo Column { get; set; }
-        public string Data { get; set; }
-    }
-
     public class CsvConvertor
     {
         public static readonly string Delimiter = ",";
 
-        public static void Serialize<T>(IEnumerable<T> obj, Stream stream)
+        public static async Task Serialize<T>(IEnumerable<T> obj, Stream stream)
         {
             var type = typeof(T);
 
@@ -37,13 +25,13 @@ namespace DataStore
 
             var writer = new StreamWriter(stream);
 
-            AddHeader(columnList, writer);
-            AddRows(obj, columnList, writer);
+            await AddHeader(columnList, writer);
+            await AddRows(obj, columnList, writer);
 
-            writer.Flush();
+            await writer.FlushAsync();
         }
 
-        private static void AddHeader(List<ColumnInfo> columnList, StreamWriter writer)
+        private static async Task AddHeader(List<ColumnInfo> columnList, StreamWriter writer)
         {
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < columnList.Count; i++)
@@ -52,10 +40,11 @@ namespace DataStore
                     stringBuilder.Append(Delimiter);
                 stringBuilder.Append(columnList[i].ColumnName);
             }
-            writer.WriteLine(stringBuilder.ToString());
+
+            await writer.WriteLineAsync(stringBuilder.ToString());
         }
 
-        private static void AddRows<T>(IEnumerable<T> obj, List<ColumnInfo> columnList, StreamWriter writer)
+        private static async Task AddRows<T>(IEnumerable<T> obj, List<ColumnInfo> columnList, StreamWriter writer)
         {
             foreach (var item in obj)
             {
@@ -79,7 +68,7 @@ namespace DataStore
                     stringBuilder.Append(value);
                 }
 
-                writer.WriteLine(stringBuilder.ToString());
+                await writer.WriteLineAsync(stringBuilder.ToString());
             }
         }
 

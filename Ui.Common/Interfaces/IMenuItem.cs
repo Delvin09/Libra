@@ -1,4 +1,6 @@
-﻿namespace Ui.Common.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Ui.Common.Interfaces
 {
     public interface IMenuItem
     {
@@ -6,6 +8,6 @@
         int Order { get; }
         string Title { get; }
 
-        bool Process();
+        Task<bool> Process();
     }
 }

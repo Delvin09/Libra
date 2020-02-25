@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColumnInfo.cs" />
     <Compile Include="ColumnNameCsvAttribute.cs" />
     <Compile Include="IgnoreCsvAttribute.cs" />
     <Compile Include="CsvConvertor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RowInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

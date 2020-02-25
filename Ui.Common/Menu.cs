@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Ui.Common.Interfaces;
+using System.Threading.Tasks;
 
 namespace Ui.Common
 {
@@ -30,7 +31,7 @@ namespace Ui.Common
             _items.Add(menuItem);
         }
 
-        public bool Process()
+        public async Task<bool> Process()
         {
             var isExit = false;
             while (!isExit)
@@ -41,7 +42,7 @@ namespace Ui.Common
                 {
                     foreach (var item in Items.Where(i => i.Num == num))
                     {
-                        isExit = item.Process();
+                        isExit = await item.Process();
                     }
                 }
                 else

@@ -9,11 +9,11 @@ namespace Ui.Common
 {
     internal class ExitMenuItem : MenuItem
     {
-        public ExitMenuItem(int num = 0, int order = int.MaxValue, string title = "Exit", Action handler = null)
+        public ExitMenuItem(int num = 0, int order = int.MaxValue, string title = "Exit", Func<Task> handler = null)
             : base(num, order, title, handler)
         {
         }
 
-        public override bool Process() => true;
+        public override Task<bool> Process() => Task.FromResult(true);
     }
 }

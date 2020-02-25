@@ -2,18 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Model
 {
-    public class Blablabla
-    {
-        private static string __hack = typeof(SqlProviderServices).ToString();
-    }
-
     public class LibraryContext : DbContext
     {
         public LibraryContext()

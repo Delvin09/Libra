@@ -72,10 +72,14 @@ namespace Ui.Common
                 throw new InvalidOperationException($"MenuItem handler {invalidMenuItem.DeclaringType.FullName}.{invalidMenuItem.Name} must not has parameters.");
             }
 
-            foreach(var menuItem in menuItems)
+            foreach (var menuItem in menuItems)
             {
                 var attr = menuItem.GetCustomAttribute<MenuItemAttribute>();
-                menu.AddItem(new MenuItem(attr.Num, attr.Order, attr.Title, () => { menuItem.Invoke(Activator.CreateInstance(type), new object[0]); }));
+                menu.AddItem(new MenuItem(attr.Num, attr.Order, attr.Title, async () => {
+                    var task = menuItem.Invoke(Activator.CreateInstance(type), new object[0]) as Task;
+                    if (task != null)
+                        await task;
+                }));
             }
 
             foreach(var menuItem in _toAll.Except(menu.Items))
