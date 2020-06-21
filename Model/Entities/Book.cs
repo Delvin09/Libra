@@ -1,4 +1,5 @@
-﻿using Model.Entities;
+﻿using DataStore;
+using Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Model
         public string Title { get; set; }
         public virtual Author Author { get; set; }
         public int Year { get; set; }
+
+        [ColumnNameCsv("New Genre")]
         public BookGenre Genre { get; set; }
 
         public Client Client { get; set; }

@@ -1,6 +1,6 @@
 ﻿using Model;
 using System;
-
+using System.Threading.Tasks;
 using ClientModel = Model.Entities.Client;
 
 namespace Client
@@ -9,11 +9,11 @@ namespace Client
     {
         public static ClientModel CurrentClient { get; private set; }
 
-        private static ClientModel FindClient(string name)
+        private async static Task<ClientModel> FindClient(string name)
         {
             using (var repository = new LibraryRepository())
             {
-                return repository.FindClient(name);
+                return await repository.FindClient(name);
             }
         }
 
@@ -25,13 +25,13 @@ namespace Client
             }
         }
 
-        public static void Login()
+        public async static void Login()
         {
             Console.WriteLine("Enter your name: ");
             var clientName = Console.ReadLine();
             var client = FindClient(clientName);
             if (client != null)
-                CurrentClient = client;
+                CurrentClient = await client;
             else
                 CurrentClient = CreateClient(clientName);
         }

@@ -11,7 +11,7 @@ namespace Libra
         public FindSubmenu FindSubmenu { get; } = new FindSubmenu();
 
         [MenuItem(2, "Add book")]
-        public void AddBook()
+        public async void AddBook()
         {
             using (var repository = new LibraryRepository())
             {
@@ -56,7 +56,7 @@ namespace Libra
                 }
                 while (!DateTime.TryParse(bdStr, out bd));
 
-                var existingAuthor = repository.FindAuthorByName(firstName, midName, lastName, bd).FirstOrDefault();
+                var existingAuthor = (await repository.FindAuthorByName(firstName, midName, lastName, bd)).FirstOrDefault();
                 if (existingAuthor == null)
                 {
                     existingAuthor = new Author()
@@ -81,7 +81,7 @@ namespace Libra
         }
 
         [MenuItem(3, "Remove book")]
-        public void RemoveBook()
+        public async void RemoveBook()
         {
             using (var repository = new LibraryRepository())
             {
@@ -89,7 +89,7 @@ namespace Libra
                 var input = Console.ReadLine();
                 if (Guid.TryParse(input, out Guid bookId))
                 {
-                    if (repository.RemoveById(bookId) != null)
+                    if (await repository.RemoveById(bookId) != null)
                     {
                         Console.WriteLine("Book removed success!");
                     }
@@ -106,5 +106,8 @@ namespace Libra
                 Console.ReadLine();
             }
         }
+
+        [MenuItem(4, "Export")]
+        public ExportSubmenu ExportSubmenu { get; } = new ExportSubmenu();
     }
 }

@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="__Hack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -87,6 +88,12 @@
     <EmbeddedResource Include="Migrations\202002111825213_HistoryBor.resx">
       <DependentUpon>202002111825213_HistoryBor.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataStore\DataStore.csproj">
+      <Project>{8f90b3d5-118e-4a57-8990-2d3318218e9d}</Project>
+      <Name>DataStore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

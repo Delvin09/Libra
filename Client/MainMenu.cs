@@ -10,7 +10,7 @@ namespace Client
     class MainMenu
     {
         [MenuItem(1, "Borrow book")]
-        public void BorrowBook()
+        public async void BorrowBook()
         {
             using (var repository = new LibraryRepository())
             {
@@ -20,14 +20,14 @@ namespace Client
                 Console.WriteLine("Enter book year: ");
                 var year = int.Parse(Console.ReadLine());
 
-                var book = repository.FindByYear(year).Where(b => b.Title == title).FirstOrDefault();
+                var book = (await repository.FindByYear(year)).Where(b => b.Title == title).FirstOrDefault();
                 if (book == null)
                     Console.WriteLine("Can't find any book");
                 else if (book.Client != null)
                     Console.WriteLine("This book is borrowed");
                 else
                 {
-                    var currentClient = repository.FindClient(ClientService.CurrentClient.Name);
+                    var currentClient = await repository.FindClient(ClientService.CurrentClient.Name);
                     book.Client = currentClient;
                     currentClient.History = new List<BorrowedHistory>();
                     currentClient.History.Add(new BorrowedHistory()
@@ -41,24 +41,24 @@ namespace Client
         }
 
         [MenuItem(2, "Return book")]
-        public void ReturnBook()
+        public async void ReturnBook()
         {
             using (var repository = new LibraryRepository())
             {
                 Console.WriteLine("Enter borrowed id: ");
                 var id = int.Parse(Console.ReadLine());
 
-                var history = repository.GetAllBorrowed(ClientService.CurrentClient).Single(h => h.Id == id);
+                var history = (await repository.GetAllBorrowed(ClientService.CurrentClient)).Single(h => h.Id == id);
                 history.ReturnDate = DateTime.Now;
             }
         }
 
         [MenuItem(3, "View borrowed books")]
-        public void ViewBorrowBook()
+        public async void ViewBorrowBook()
         {
             using (var repository = new LibraryRepository())
             {
-                var borrowedBooks = repository.GetAllBorrowed(ClientService.CurrentClient)?.Where(h => h.ReturnDate == null);
+                var borrowedBooks = (await repository.GetAllBorrowed(ClientService.CurrentClient))?.Where(h => h.ReturnDate == null);
                 if (borrowedBooks != null && borrowedBooks.Any())
                 {
                     foreach (var item in borrowedBooks)
@@ -75,11 +75,11 @@ namespace Client
         }
 
         [MenuItem(4, "View history of borrowed books")]
-        public void ViewHistoryBorrowBook()
+        public async void ViewHistoryBorrowBook()
         {
             using (var repository = new LibraryRepository())
             {
-                var borrowedBooks = repository.GetAllBorrowed(ClientService.CurrentClient)?.Where(h => h.ReturnDate != null);
+                var borrowedBooks = (await repository.GetAllBorrowed(ClientService.CurrentClient))?.Where(h => h.ReturnDate != null);
                 if (borrowedBooks != null && borrowedBooks.Any())
                 {
                     foreach (var item in borrowedBooks)
